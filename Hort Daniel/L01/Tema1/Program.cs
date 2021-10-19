@@ -6,6 +6,8 @@ using static L01.Domain.AppDomain;
 using static L01.Domain.CartState;
 using L01.Extensions;
 using L01.Domain;
+using L01.Workflow;
+using static L01.Workflow.AuthEvent;
 
 namespace L01
 {
@@ -13,16 +15,17 @@ namespace L01
     {
         static void Main(string[] args)
         {
-            var userResult = Authenticate(RequestCredentials());
-            var (response, user, exit) = userResult.Case switch
+            var pass = RequestCredentials();
+            var workflow = new AuthWorkflow();
+            var authEvent = workflow.Execute(new AuthCmd(pass));
+            var (response, user, cart, exit) = authEvent switch
             {
-                SomeCase<User> a => ($"Welcome {a.Value.Name}", a.Value, false),
-                NoneCase<User> _ => ("Invalid credentials", null, true)
+                AuthorizedEvent a => (a.Message, a.User, a.Cart, false),
+                UnauthorizedEvent a => (a.Message, null, null, true)
             };
             Console.WriteLine(response);
             if (exit) return;
 
-            var cart = (CreateCart(user) as EmptyCart).Cart;
             while (true)
             {
                 var (product, quantity) = RequestItem();
