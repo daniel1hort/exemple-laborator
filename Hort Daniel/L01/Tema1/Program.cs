@@ -54,9 +54,9 @@ namespace L01
             Console.Write(cart.Items
                 .OrderBy(a => a.Product.Id)
                 .Select(a => $"\t{a.Product.Id} / {a.Product.Name} / {a.Product.Price} / {a.Quantity}" + Environment.NewLine)
-                .Aggregate((a, b) => a + b));
+                .Aggregate(string.Empty, (a, b) => a + b));
             Console.Write("Total price: ");
-            Console.WriteLine(cart.Items.Select(a => a.Product.Price * a.Quantity).Aggregate((a, b) => a + b));
+            Console.WriteLine(cart.Items.Select(a => a.Product.Price * a.Quantity).Aggregate(0f, (a, b) => a + b));
             Console.WriteLine();
             return Unit.Default;
         }
@@ -67,7 +67,7 @@ namespace L01
             return Console.ReadLine();
         }
 
-        public static (Option<Product>, int) RequestItem()
+        public static (Option<Product>, TryAsync<int>) RequestItem()
         {
             var products = FakeDB.LoadProducts();
             products.Iter(a => Console.WriteLine($"Id: {a.Id}, Price: {a.Price}, Name: {a.Name}"));
@@ -75,9 +75,14 @@ namespace L01
             Console.Write("Product Id: ");
             var productId = Console.ReadLine().Trim();
             Console.Write("Quantity: ");
-            var quantity = int.Parse(Console.ReadLine().Trim()); // n-am chef sa fac validare
+            var quantityRaw = Console.ReadLine().Trim();
             var product = products.FirstOrDefault(a => a.Id.ToString() == productId);
-            return (product, quantity);
+            return (product, async () => {
+                var quantity = int.Parse(quantityRaw);
+                if (quantity <= 0)
+                    throw new Exception("Quantity must be bigger than 0");
+                return quantity;
+            });
         }
 
         public static bool RequestPayment()
