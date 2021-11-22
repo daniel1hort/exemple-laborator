@@ -1,0 +1,8 @@
+﻿CREATE TABLE [dbo].[OrderLine]
+(
+	[Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+	[ProductId] INT NOT NULL FOREIGN KEY REFERENCES Product(Id),
+	[OrderId] INT NOT NULL FOREIGN KEY REFERENCES OrderHeader(Id),
+	[Quantity] INT NOT NULL,
+	[Price] FLOAT NOT NULL
+)

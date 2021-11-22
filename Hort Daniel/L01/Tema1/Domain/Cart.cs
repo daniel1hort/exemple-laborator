@@ -1,10 +1,7 @@
-﻿using LanguageExt;
-using System;
+﻿using L01.Fake;
+using L01.Models;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using L01.Fake;
 
 namespace L01.Domain
 {

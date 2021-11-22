@@ -1,0 +1,6 @@
+﻿CREATE TABLE [dbo].[OrderHeader]
+(
+	[Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+	[Address] VARCHAR(MAX) NOT NULL,
+	[TotalPrice] FLOAT NOT NULL
+)
