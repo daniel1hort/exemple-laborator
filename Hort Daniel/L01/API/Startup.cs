@@ -14,6 +14,8 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using L01.Models;
 using L01.Domain;
+using Example.Events;
+using Example.Events.ServiceBus;
 
 namespace API
 {
@@ -38,6 +40,7 @@ namespace API
             services.AddDbContext<PSSCContext>(builder 
                 => builder.UseSqlServer(Configuration.GetConnectionString("Local")));
             services.AddSingleton<CartWrapper>(new CartWrapper() { Cart = new Cart(new L01.Fake.User("name", "pass")) });
+            services.AddSingleton<IEventSender, ServiceBusTopicEventSender>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

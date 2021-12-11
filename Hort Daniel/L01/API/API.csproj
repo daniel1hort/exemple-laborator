@@ -11,6 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Example6.Legacy\Example.Events.ServiceBus\Example.Events.ServiceBus.csproj" />
+    <ProjectReference Include="..\Example6.Legacy\Example.Events\Example.Events.csproj" />
     <ProjectReference Include="..\Tema1\L01.csproj" />
   </ItemGroup>
 

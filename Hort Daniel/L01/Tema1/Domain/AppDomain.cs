@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using L01.Fake;
 using static L01.Domain.CartState;
 using L01.Models;
+using Example.Events;
 
 namespace L01.Domain
 {
@@ -37,7 +38,7 @@ namespace L01.Domain
         }
 
         private static Product ChangeStoc(Product p, int quantity) { p.Stoc = p.Stoc - quantity; return p; }
-        public static ICartState PayCart(Cart cart, string address, PSSCContext context)
+        public static ICartState PayCart(Cart cart, string address, PSSCContext context, IEventSender sender)
         {
             var order = new OrderHeader()
             {
@@ -58,6 +59,7 @@ namespace L01.Domain
 
             context.OrderHeaders.Add(order);
             context.Products.UpdateRange(updatedProducts);
+            sender.SendAsync("invoice", cart);
             return new PaidCart();
         }
 

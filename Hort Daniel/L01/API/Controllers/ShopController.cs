@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using LanguageExt;
 using static L01.Domain.CartState;
+using Example.Events;
 
 namespace API.Controllers
 {
@@ -18,11 +19,13 @@ namespace API.Controllers
     {
         private readonly PSSCContext context;
         private CartWrapper cart;
+        private readonly IEventSender sender;
 
-        public ShopController(PSSCContext context, CartWrapper cart)
+        public ShopController(PSSCContext context, CartWrapper cart, IEventSender sender)
         {
             this.context = context;
             this.cart = cart;
+            this.sender = sender;
         }
 
         [HttpGet]
@@ -51,7 +54,7 @@ namespace API.Controllers
         {
             if (!cart.Cart.Items.Any())
                 return BadRequest("Please add items to cart first");
-            L01.Domain.AppDomain.PayCart(cart.Cart, address, context);
+            L01.Domain.AppDomain.PayCart(cart.Cart, address, context, sender);
             cart.Cart = cart.Cart with { Items = Enumerable.Empty<(Product, int)>() };
             await context.SaveChangesAsync();
             return Ok();

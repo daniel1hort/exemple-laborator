@@ -57,8 +57,8 @@ namespace L01
                 Console.ResetColor();
                 if (RequestPayment())
                 {
-                    PayCart(cart, RequestAddress(), context);
-                    await context.SaveChangesAsync();
+                    //PayCart(cart, RequestAddress(), context);
+                    //await context.SaveChangesAsync();
                     Console.WriteLine($"Good day {user.Name}");
                     break;
                 }
